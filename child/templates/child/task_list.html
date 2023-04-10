@@ -1,0 +1,102 @@
+{% extends 'child/main.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+</head>
+<body>
+    <div class="header-bar" >
+    <div>
+        <h1> Hello {{request.user|title}}</h1>  <!-- here the single pipeline or bar make the first letter of the tile make capital -->
+        <h3 style="margin: 0;">You have <i>{{count}}</i> incomplete task{{ count|pluralize:"s" }}</h3> <!-- here count|pluralize makes the 's' if the number of takes are greater than 1 -->
+    </div>
+
+    {% if request.user.is_authenticated %}
+   <!-- <p>{{request.user}}</p>  here we have commented becaused this is already taken in above with some style along with Hello--> 
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+    </div>
+
+    <div id="search-add-wrapper">
+        <form method="GET" style="margin-top: 20px; display: flex;">  
+            <input type="text" name="search-area" value="{{search_input}}">
+            <input class="button" type="submit" value="Search">
+        </form>    
+        <a id="add-link" href="{% url 'todocreate' %}">&#x2b;</a>
+    </div>
+
+    <!-- <hr>     -->
+
+    <!-- <h1>Welcome to My To Do List {{context}}</h1>
+    <a href="{% url 'todocreate' %}">Add Task</a>
+
+    <form method="GET"> 
+        <input type="text" name="search-area" value="{{search_input}}">
+        <input type="submit" value="Search">
+    </form> -->
+
+    <div class="task-items-wrapper">
+        {% for taask in tasks %}
+        <div class="task-wrapper">
+            {% if taask.complete %}
+            <div class="task-title">
+                <div class="task-complete-icon"></div>
+                <i><s><a href="{% url 'todoupdate' taask.id %}">{{taask}}</a></s></i>
+            </div>
+
+            <a class="delete-link" href="{% url 'tododelete' taask.id %}">&#215;</a> <!-- here , &#215; is for the x(cross) symbol-->
+            {% else %}
+            
+            
+            <div class="task-title">
+                <div class="task-incomplete-icon"></div>
+                <a href="{% url 'todoupdate' taask.id %}">{{taask}}</a>
+
+             </div> 
+
+             <a class="delete-link" href="{% url 'tododelete' taask.id %}">&#215;</a> <!-- here , &#215; is for the x(cross) symbol-->
+             {% endif %}  
+
+             
+
+        </div>
+             {% empty %}
+             <h3>No Items in list</h3>
+             {% endfor %}
+    </div>
+<!-- 
+    <table>
+    <tr>
+        <th>
+            Items
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+        
+            {% for taask in tasks %}    by default it is , object_list == tasks
+      <tr>
+        <td>
+            {{taask.title}}
+        </td>
+        <td><a href="{% url 'tododetail' taask.id %}">View</a></td>
+        <td><a href="{% url 'todoupdate' taask.id %}">Edit</a></td>
+        <td><a href="{% url 'tododelete' taask.id %}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <h3>No Items in list</h3>
+    {% endfor %}
+</table> -->
+</body>
+</html>
+
+{% endblock content %}
